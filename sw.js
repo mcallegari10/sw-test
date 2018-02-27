@@ -2,16 +2,21 @@ const CACHE_NAME = 'v1'
 const filesToCache = [
   '/',
   'index.html',
-  'app.js'
+  'app.js',
+  'styles.css'
 ];
 
 /**
  * On install, add all the files to the cache API
  */
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(filesToCache))
-  )
+  console.log('Installing Service Worker...')
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(filesToCache)))
+  self.skipWaiting()
+})
+
+self.addEventListener('activate', event => {
+  console.log('Activating Service Worker...')
 })
 
 /** 
@@ -20,6 +25,7 @@ self.addEventListener('install', event => {
 * it will fetch it and then store it to the cache
 */
 self.addEventListener('fetch', event => {
+  console.log(`Fetching: ${event.request}`)
   event.respondWith(caches.match(event.request))
     .then(response => response || fetch(event.request).then(response =>
       caches.open(CACHE_NAME).then(cache => {
