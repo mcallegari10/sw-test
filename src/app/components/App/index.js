@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 
 import logo from '../../../logo.svg';
+import api from '../../../api';
 
 import style from './styles.scss';
 
 class App extends Component {
+  state = {
+    user: {}
+  };
+
+  componentWillMount() {
+    api.get('/users/mcallegari10').then(response => {
+      this.setState({ user: response.data });
+    });
+  }
+
   render() {
     return (
       <div className={style.app}>

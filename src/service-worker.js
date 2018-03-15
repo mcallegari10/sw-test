@@ -3,9 +3,7 @@ const path = require('path')
 const CACHE_NAME = path.dirname(__dirname)
 const filesToCache = [
   '/sw-test/',
-  '/sw-test/public/index.html',
-  '/sw-testapp.js',
-  'styles.css'
+  '/sw-test/public/index.html'
 ]
 
 /**
@@ -26,7 +24,8 @@ self.addEventListener('activate', event => {
 * it will fetch it and then store it to the cache
 */
 self.addEventListener('fetch', event => {
-  console.log(`Fetching: ${event.request}`)
+  console.log('Fetching:', event.request)
+  debugger
   event.respondWith(caches.match(event.request))
     .then(response => response || fetch(event.request).then(response =>
       caches.open(CACHE_NAME).then(cache => {
@@ -40,9 +39,4 @@ self.addEventListener('fetch', event => {
         return response
       })
     ))
-    .catch(() => {
-      new Response('<p>Hello from your friendly neighbourhood service worker!</p>', {
-        headers: { 'Content-Type': 'text/html' }
-      })
-    })
 })
